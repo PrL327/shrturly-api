@@ -1,11 +1,27 @@
 import validators
+import datetime
+import uuid
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import RedirectResponse
-from src.objects.url import URL
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from src.database.db import __connect_to_db 
 
+origins = ["*"]
+
+class URL(BaseModel):
+    code: str
+    path: str    
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -25,7 +41,7 @@ def create_shortened_url(url: URL):
         query = 'INSERT INTO urls (code,url,uuid,createdAt) VALUES(?,?,?,?)'
         conn = __connect_to_db()
         cur = conn.cursor()
-        val = (url.code, url.path, url.uuid, url.createdAt)
+        val = (url.code, url.path, str(uuid.uuid4()), datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         cur.execute(query, val);
         conn.commit()
         cur.close()

@@ -1,11 +1,5 @@
-from pydantic import BaseModel;
-import uuid
-import datetime
+from pydantic import BaseModel
 
 class URL(BaseModel):
     code: str
-    path: str
-    uuid: str
-    createdAt: datetime.datetime
-
-    
+    path: str    
