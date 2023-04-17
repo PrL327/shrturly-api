@@ -4,14 +4,11 @@ import uuid
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from src.database.db import __connect_to_db 
+from src.objects.url import URL
 
 origins = ["*"]
-
-class URL(BaseModel):
-    code: str
-    path: str    
+   
 
 app = FastAPI()
 
